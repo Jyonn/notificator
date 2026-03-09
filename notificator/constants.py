@@ -1,0 +1,3 @@
+DEFAULT_HOST = 'https://notice.6-79.cn'
+DEFAULT_TIMEOUT = 15
+DEFAULT_LOCALE = 'zh-CN'
