@@ -9,7 +9,7 @@ README = (BASE_DIR / 'README.md').read_text(encoding='utf-8')
 setup(
     name='notificator',
     version='0.4.1',
-    keywords=['notice', 'notificator', 'bark', 'ntfy', 'sms', 'mail', 'webhook'],
+    keywords=['notice', 'notificator', 'bark', 'ntfy', 'gotify', 'sms', 'mail', 'webhook'],
     description='Notificator SDK with AdminClient and Sender Notificator',
     long_description=README,
     long_description_content_type='text/markdown',

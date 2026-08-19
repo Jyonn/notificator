@@ -237,6 +237,37 @@ class NotificatorTests(unittest.TestCase):
             payload['deliveries'][0]['options'],
         )
 
+    @patch('requests.request')
+    def test_gotify_shortcut_builds_delivery_options(self, mock_request):
+        mock_request.return_value = FakeResponse(ok_payload({'request_id': 'rid-4'}))
+
+        client = Notificator('demo', 'account-token', host='http://localhost:8001')
+        client.gotify(
+            'https://push.example.com',
+            'A_secret',
+            'markdown',
+            '**healthy**',
+            title='Deploy',
+            priority=7,
+            click='https://example.com/jobs/42',
+            big_image_url='https://example.com/status.png',
+        )
+
+        payload = mock_request.call_args.kwargs['json']
+        self.assertEqual('markdown', payload['message']['format'])
+        self.assertEqual('gotify', payload['deliveries'][0]['channel'])
+        self.assertEqual('https://push.example.com', payload['deliveries'][0]['target'])
+        self.assertEqual(
+            {
+                'title': 'Deploy',
+                'token': 'A_secret',
+                'priority': 7,
+                'click': 'https://example.com/jobs/42',
+                'big_image_url': 'https://example.com/status.png',
+            },
+            payload['deliveries'][0]['options'],
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

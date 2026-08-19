@@ -151,6 +151,30 @@ class Notificator(BaseClient):
             payload.update(options)
         return self.prepare_delivery('ntfy', uri, payload)
 
+    def prepare_gotify(
+        self,
+        uri: str,
+        *,
+        token: str,
+        priority: Optional[int] = None,
+        click: Optional[str] = None,
+        big_image_url: Optional[str] = None,
+        extras: Optional[dict] = None,
+        title: Optional[str] = None,
+        options: Optional[dict] = None,
+    ) -> 'Notificator':
+        payload = {
+            'title': title,
+            'token': token,
+            'priority': priority,
+            'click': click,
+            'big_image_url': big_image_url,
+            'extras': extras,
+        }
+        if options:
+            payload.update(options)
+        return self.prepare_delivery('gotify', uri, payload)
+
     def prepare_mail(
         self,
         mail: str,
@@ -331,6 +355,38 @@ class Notificator(BaseClient):
             tags=tags,
             click=click,
             icon=icon,
+            options=options,
+        ).send(
+            format=format,
+            body=body,
+            title=title,
+            locale=locale,
+        )
+
+    def gotify(
+        self,
+        uri: str,
+        token: str,
+        format: str = 'text',
+        body: Any = None,
+        title: Optional[str] = None,
+        *,
+        locale: Optional[str] = None,
+        priority: Optional[int] = None,
+        click: Optional[str] = None,
+        big_image_url: Optional[str] = None,
+        extras: Optional[dict] = None,
+        options: Optional[dict] = None,
+    ):
+        format, body = self._normalize_shortcut_message(format, body)
+        return self.clean().prepare_gotify(
+            uri,
+            title=title,
+            token=token,
+            priority=priority,
+            click=click,
+            big_image_url=big_image_url,
+            extras=extras,
             options=options,
         ).send(
             format=format,

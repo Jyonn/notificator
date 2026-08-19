@@ -128,6 +128,24 @@ client.ntfy(
 )
 ```
 
+### Gotify
+
+Pass the Gotify server URL and an application token. A server hosted below a URL
+prefix, such as `https://push.example.com/gotify`, is also supported.
+
+```python
+client.gotify(
+    "https://push.example.com",
+    token="A_your-application-token",
+    format="markdown",
+    title="Deploy finished",
+    body="Production is **healthy**.",
+    priority=7,
+    click="https://example.com/jobs/42",
+    big_image_url="https://example.com/status.png",
+)
+```
+
 ### Webhook
 
 ```python
