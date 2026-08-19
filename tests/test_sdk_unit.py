@@ -268,6 +268,31 @@ class NotificatorTests(unittest.TestCase):
             payload['deliveries'][0]['options'],
         )
 
+    @patch('requests.request')
+    def test_pushdeer_shortcut_builds_delivery_options(self, mock_request):
+        mock_request.return_value = FakeResponse(ok_payload({'request_id': 'rid-5'}))
+
+        client = Notificator('demo', 'account-token', host='http://localhost:8001')
+        client.pushdeer(
+            'PDU123456',
+            'markdown',
+            '**healthy**',
+            title='Deploy',
+            server='https://push.example.com/pushdeer',
+        )
+
+        payload = mock_request.call_args.kwargs['json']
+        self.assertEqual('markdown', payload['message']['format'])
+        self.assertEqual('pushdeer', payload['deliveries'][0]['channel'])
+        self.assertEqual('PDU123456', payload['deliveries'][0]['target'])
+        self.assertEqual(
+            {
+                'title': 'Deploy',
+                'server': 'https://push.example.com/pushdeer',
+            },
+            payload['deliveries'][0]['options'],
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

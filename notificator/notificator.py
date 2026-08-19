@@ -175,6 +175,22 @@ class Notificator(BaseClient):
             payload.update(options)
         return self.prepare_delivery('gotify', uri, payload)
 
+    def prepare_pushdeer(
+        self,
+        pushkey: str,
+        *,
+        server: Optional[str] = None,
+        title: Optional[str] = None,
+        options: Optional[dict] = None,
+    ) -> 'Notificator':
+        payload = {
+            'title': title,
+            'server': server,
+        }
+        if options:
+            payload.update(options)
+        return self.prepare_delivery('pushdeer', pushkey, payload)
+
     def prepare_mail(
         self,
         mail: str,
@@ -387,6 +403,30 @@ class Notificator(BaseClient):
             click=click,
             big_image_url=big_image_url,
             extras=extras,
+            options=options,
+        ).send(
+            format=format,
+            body=body,
+            title=title,
+            locale=locale,
+        )
+
+    def pushdeer(
+        self,
+        pushkey: str,
+        format: str = 'text',
+        body: Any = None,
+        title: Optional[str] = None,
+        *,
+        locale: Optional[str] = None,
+        server: Optional[str] = None,
+        options: Optional[dict] = None,
+    ):
+        format, body = self._normalize_shortcut_message(format, body)
+        return self.clean().prepare_pushdeer(
+            pushkey,
+            title=title,
+            server=server,
             options=options,
         ).send(
             format=format,

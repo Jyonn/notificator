@@ -146,6 +146,26 @@ client.gotify(
 )
 ```
 
+### PushDeer
+
+The official server is used by default. Pass `server` when using a self-hosted
+PushDeer instance.
+
+```python
+client.pushdeer(
+    "PDU_your-push-key",
+    format="markdown",
+    title="Deploy finished",
+    body="Production is **healthy**.",
+)
+
+client.pushdeer(
+    "PDU_your-push-key",
+    body="Production is healthy.",
+    server="https://push.example.com/pushdeer",
+)
+```
+
 ### Webhook
 
 ```python
