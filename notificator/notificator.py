@@ -127,6 +127,30 @@ class Notificator(BaseClient):
             payload.update(options)
         return self.prepare_delivery('sms', phone, payload)
 
+    def prepare_ntfy(
+        self,
+        uri: str,
+        *,
+        token: Optional[str] = None,
+        priority: Optional[Any] = None,
+        tags: Optional[List[str]] = None,
+        click: Optional[str] = None,
+        icon: Optional[str] = None,
+        title: Optional[str] = None,
+        options: Optional[dict] = None,
+    ) -> 'Notificator':
+        payload = {
+            'title': title,
+            'token': token,
+            'priority': priority,
+            'tags': tags,
+            'click': click,
+            'icon': icon,
+        }
+        if options:
+            payload.update(options)
+        return self.prepare_delivery('ntfy', uri, payload)
+
     def prepare_mail(
         self,
         mail: str,
@@ -275,6 +299,38 @@ class Notificator(BaseClient):
         return self.clean().prepare_sms(
             phone,
             template_param=template_param,
+            options=options,
+        ).send(
+            format=format,
+            body=body,
+            title=title,
+            locale=locale,
+        )
+
+    def ntfy(
+        self,
+        uri: str,
+        format: str = 'text',
+        body: Any = None,
+        title: Optional[str] = None,
+        *,
+        locale: Optional[str] = None,
+        token: Optional[str] = None,
+        priority: Optional[Any] = None,
+        tags: Optional[List[str]] = None,
+        click: Optional[str] = None,
+        icon: Optional[str] = None,
+        options: Optional[dict] = None,
+    ):
+        format, body = self._normalize_shortcut_message(format, body)
+        return self.clean().prepare_ntfy(
+            uri,
+            title=title,
+            token=token,
+            priority=priority,
+            tags=tags,
+            click=click,
+            icon=icon,
             options=options,
         ).send(
             format=format,
